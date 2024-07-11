@@ -22,6 +22,13 @@
 #define MAX_MOTORS_NUM 30		  /*Max motors*/
 #define MAX_REFERNECE_GROUPS 2000 /*Max group motor references*/
 
+#define P_START 0
+#define P_END 5
+
+// 共享内存区域,2M大小
+#define SHM_KEY 12345
+#define SHM_SIZE (1024 * 1024 * 2)
+
 typedef struct
 {
 	int ctrl_word;		/*CiA402 control word*/
