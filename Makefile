@@ -11,14 +11,13 @@ LDFLAGS = -L/usr/local/etherlab/lib
 LDLIBS = -lethercat
 
 # Source Files
-SRCS = main_t_6.c ecat_data_buffer.c
-# SRCS = main.c ecat_data_buffer.c
+SRCS = main.c ecat_data_buffer.c
 
-# Object Files
-OBJS = $(SRCS:.c=.o)
+# Object Files (placed in the build directory)
+OBJS = $(patsubst %.c, build/%.o, $(SRCS))
 
-# Executable
-EXEC = main
+# Executable (placed in the build directory)
+EXEC = build/main
 
 # Default Target
 all: $(EXEC)
@@ -27,13 +26,17 @@ all: $(EXEC)
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(EXEC) $(OBJS) $(LDLIBS)
 
-# Compilation
-%.o: %.c
+# Compilation (placing .o files in the build directory)
+build/%.o: %.c | build
 	$(CC) $(CFLAGS) -c $< -o $@
+
+# Create build directory if it doesn't exist
+build:
+	mkdir -p build
 
 # Clean
 clean:
-	rm -f $(OBJS) $(EXEC)
+	rm -rf build $(EXEC)
 
 # PHONY Targets
 .PHONY: all clean
