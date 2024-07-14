@@ -22,8 +22,8 @@
 #define MAX_MOTORS_NUM 30		  /*Max motors*/
 #define MAX_REFERNECE_GROUPS 2000 /*Max group motor references*/
 
-#define P_START 0
-#define P_END 5
+#define P_START 4
+#define P_END 17
 
 // 共享内存区域,2M大小
 #define SHM_KEY 12345
@@ -38,6 +38,7 @@ typedef struct
 	int target_torque;	/*motor target torque*/
 	int speed_offset;	/*motor speed offset*/
 	int torque_offset;	/*motor torque offset*/
+	int default_position;
 } MOTOR_REFERENCE;
 
 typedef struct
@@ -48,7 +49,6 @@ typedef struct
 	int feedbk_torque;	/*Feed back torque*/
 	int target_position;
 	int target_torque_offset;	
-	int default_position;
 } MOTOR_FEEDBACK;
 
 typedef struct
@@ -69,6 +69,7 @@ typedef struct
 typedef struct
 {
 	MOTOR_FEEDBACK motor_fdbk[MAX_MOTORS_NUM]; /*Feedback data for all motor*/
+	int reached;
 } GROUP_FEEDBACK;
 
 typedef struct

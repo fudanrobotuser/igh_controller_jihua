@@ -11,7 +11,11 @@ LDFLAGS = -L/usr/local/etherlab/lib
 LDLIBS = -lethercat
 
 # Source Files
-SRCS = main.c ecat_data_buffer.c
+# SRCS = main.c ecat_data_buffer.c
+# SRCS = main_t_6.c ecat_data_buffer.c
+# SRCS = main_jihua_12_csp_0714.c ecat_data_buffer.c
+SRCS = main_kaixuan_14_csp_0714.c ecat_data_buffer.c
+
 
 # Object Files (placed in the build directory)
 OBJS = $(patsubst %.c, build/%.o, $(SRCS))
