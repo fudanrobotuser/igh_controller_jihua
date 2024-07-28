@@ -38,9 +38,6 @@
 #define THREAD_PRIORITY 60 // Priority for the real-time thread
 #define PI 3.1415926
 
-// 共享内存区域,2M大小
-#define SHM_KEY 12345
-#define SHM_SIZE (1024 * 1024 * 2)
 bool dataOk = false;
 
 static unsigned int counter = 0;
@@ -72,6 +69,8 @@ int toZeroOffset = 200;
 
 GROUP_FEEDBACK feedback;
 GROUP_REFERENCE reference;
+
+void Igh_rechekTime();
 
 /****************************************************************************/
 
@@ -160,42 +159,193 @@ static struct
 const static ec_pdo_entry_reg_t domain1_regs[] = {
 
 
-    {0, 14, JihuaVidPid, 0x6040, 0, &offset[14].ctrl_word},
-    {0, 14, JihuaVidPid, 0x6071, 0, &offset[14].target_torque},
-    {0, 14, JihuaVidPid, 0x607a, 0, &offset[14].target_position},
-    {0, 14, JihuaVidPid, 0x60b1, 0, &offset[14].offset_velocity},
-    {0, 14, JihuaVidPid, 0x60b2, 0, &offset[14].offset_torque},
-    {0, 14, JihuaVidPid, 0x60ff, 0, &offset[14].target_velocity},
+   {0, 0+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+0].ctrl_word},
+    {0, 0+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+0].target_torque},
+    {0, 0+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+0].target_position},
+    // {0, 0+P_START, JihuaVidPid, 0x60b1, 0, &offset[P_START+0].offset_velocity},
+    // {0, 0+P_START, JihuaVidPid, 0x60b2, 0, &offset[P_START+0].offset_torque},
+    {0, 0+P_START, JihuaVidPid, 0x60ff, 0, &offset[P_START+0].target_velocity},
 
-    {0, 14, JihuaVidPid, 0x2002, 2, &offset[14].dp},
-    {0, 14, JihuaVidPid, 0x2002, 3, &offset[14].dv},
-    {0, 14, JihuaVidPid, 0x2002, 4, &offset[14].dt},
-    {0, 14, JihuaVidPid, 0x2002, 18, &offset[14].tt},
+    // {0, 0+P_START, JihuaVidPid, 0x2002, 2, &offset[P_START+0].dp},
+    // {0, 0+P_START, JihuaVidPid, 0x2002, 3, &offset[P_START+0].dv},
+    // {0, 0+P_START, JihuaVidPid, 0x2002, 4, &offset[P_START+0].dt},
+    // {0, 0+P_START, JihuaVidPid, 0x2002, 18, &offset[P_START+0].tt},
 
-    {0, 14, JihuaVidPid, 0x6041, 0, &offset[14].status_word},
-    {0, 14, JihuaVidPid, 0x6064, 0, &offset[14].act_position},
-    {0, 14, JihuaVidPid, 0x606c, 0, &offset[14].act_velocity},
-    {0, 14, JihuaVidPid, 0x6077, 0, &offset[14].act_torque},
-    {0, 14, JihuaVidPid, 0x6061, 0, &offset[14].mode_Of_Operation_dsiplay},
+    {0, 0+P_START, JihuaVidPid, 0x6041, 0, &offset[P_START+0].status_word},
+    {0, 0+P_START, JihuaVidPid, 0x6064, 0, &offset[P_START+0].act_position},
+    {0, 0+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+0].act_velocity},
+    {0, 0+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+0].act_torque},
+    {0, 0+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+0].mode_Of_Operation_dsiplay},
     ////
-    {0, 15, JihuaVidPid, 0x6040, 0, &offset[15].ctrl_word},
-    {0, 15, JihuaVidPid, 0x6071, 0, &offset[15].target_torque},
-    {0, 15, JihuaVidPid, 0x607a, 0, &offset[15].target_position},
-    {0, 15, JihuaVidPid, 0x60b1, 0, &offset[15].offset_velocity},
-    {0, 15, JihuaVidPid, 0x60b2, 0, &offset[15].offset_torque},
-    {0, 15, JihuaVidPid, 0x60ff, 0, &offset[15].target_velocity},
+#if P_COUNT > 1    
+    {0, 1+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+1].ctrl_word},
+    {0, 1+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+1].target_torque},
+    {0, 1+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+1].target_position},
+    // {0, 1+P_START, JihuaVidPid, 0x60b1, 0, &offset[P_START+1].offset_velocity},
+    // {0, 1+P_START, JihuaVidPid, 0x60b2, 0, &offset[P_START+1].offset_torque},
+    {0, 1+P_START, JihuaVidPid, 0x60ff, 0, &offset[P_START+1].target_velocity},
 
-    {0, 15, JihuaVidPid, 0x2002, 2, &offset[15].dp},
-    {0, 15, JihuaVidPid, 0x2002, 3, &offset[15].dv},
-    {0, 15, JihuaVidPid, 0x2002, 4, &offset[15].dt},
-    {0, 15, JihuaVidPid, 0x2002, 18, &offset[15].tt},
+    // {0, 1+P_START, JihuaVidPid, 0x2002, 2, &offset[P_START+1].dp},
+    // {0, 1+P_START, JihuaVidPid, 0x2002, 3, &offset[P_START+1].dv},
+    // {0, 1+P_START, JihuaVidPid, 0x2002, 4, &offset[P_START+1].dt},
+    // {0, 1+P_START, JihuaVidPid, 0x2002, 18, &offset[P_START+1].tt},
 
-    {0, 15, JihuaVidPid, 0x6041, 0, &offset[15].status_word},
-    {0, 15, JihuaVidPid, 0x6064, 0, &offset[15].act_position},
-    {0, 15, JihuaVidPid, 0x606c, 0, &offset[15].act_velocity},
-    {0, 15, JihuaVidPid, 0x6077, 0, &offset[15].act_torque},
-    {0, 15, JihuaVidPid, 0x6061, 0, &offset[15].mode_Of_Operation_dsiplay},
+    {0, 1+P_START, JihuaVidPid, 0x6041, 0, &offset[P_START+1].status_word},
+    {0, 1+P_START, JihuaVidPid, 0x6064, 0, &offset[P_START+1].act_position},
+    {0, 1+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+1].act_velocity},
+    {0, 1+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+1].act_torque},
+    {0, 1+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+1].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 2 
+    {0, 2+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+2].ctrl_word},
+    {0, 2+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+2].target_torque},
+    {0, 2+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+2].target_position},
+    // {0, 2+P_START, JihuaVidPid, 0x60b1, 0, &offset[P_START+2].offset_velocity},
+    // {0, 2+P_START, JihuaVidPid, 0x60b2, 0, &offset[P_START+2].offset_torque},
+    {0, 2+P_START, JihuaVidPid, 0x60ff, 0, &offset[P_START+2].target_velocity},
 
+    // {0, 2+P_START, JihuaVidPid, 0x2002, 2, &offset[P_START+2].dp},
+    // {0, 2+P_START, JihuaVidPid, 0x2002, 3, &offset[P_START+2].dv},
+    // {0, 2+P_START, JihuaVidPid, 0x2002, 4, &offset[P_START+2].dt},
+    // {0, 2+P_START, JihuaVidPid, 0x2002, 18, &offset[P_START+2].tt},
+
+    {0, 2+P_START, JihuaVidPid, 0x6041, 0, &offset[P_START+2].status_word},
+    {0, 2+P_START, JihuaVidPid, 0x6064, 0, &offset[P_START+2].act_position},
+    {0, 2+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+2].act_velocity},
+    {0, 2+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+2].act_torque},
+    {0, 2+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+2].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 3
+    {0, 3+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+3].ctrl_word},
+    {0, 3+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+3].target_torque},
+    {0, 3+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+3].target_position},
+    // {0, 3+P_START, JihuaVidPid, 0x60b1, 0, &offset[P_START+3].offset_velocity},
+    // {0, 3+P_START, JihuaVidPid, 0x60b2, 0, &offset[P_START+3].offset_torque},
+    {0, 3+P_START, JihuaVidPid, 0x60ff, 0, &offset[P_START+3].target_velocity},
+
+    // {0, 3+P_START, JihuaVidPid, 0x2002, 2, &offset[P_START+3].dp},
+    // {0, 3+P_START, JihuaVidPid, 0x2002, 3, &offset[P_START+3].dv},
+    // {0, 3+P_START, JihuaVidPid, 0x2002, 4, &offset[P_START+3].dt},
+    // {0, 3+P_START, JihuaVidPid, 0x2002, 18, &offset[P_START+3].tt},
+
+    {0, 3+P_START, JihuaVidPid, 0x6041, 0, &offset[P_START+3].status_word},
+    {0, 3+P_START, JihuaVidPid, 0x6064, 0, &offset[P_START+3].act_position},
+    {0, 3+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+3].act_velocity},
+    {0, 3+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+3].act_torque},
+    {0, 3+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+3].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 4 
+    {0, 4+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+4].ctrl_word},
+    {0, 4+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+4].target_torque},
+    {0, 4+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+4].target_position},
+    // {0, 4+P_START, JihuaVidPid, 0x60b1, 0, &offset[P_START+4].offset_velocity},
+    // {0, 4+P_START, JihuaVidPid, 0x60b2, 0, &offset[P_START+4].offset_torque},
+    {0, 4+P_START, JihuaVidPid, 0x60ff, 0, &offset[P_START+4].target_velocity},
+
+    // {0, 4+P_START, JihuaVidPid, 0x2002, 2, &offset[P_START+4].dp},
+    // {0, 4+P_START, JihuaVidPid, 0x2002, 3, &offset[P_START+4].dv},
+    // {0, 4+P_START, JihuaVidPid, 0x2002, 4, &offset[P_START+4].dt},
+    // {0, 4+P_START, JihuaVidPid, 0x2002, 18, &offset[P_START+4].tt},
+
+    {0, 4+P_START, JihuaVidPid, 0x6041, 0, &offset[P_START+4].status_word},
+    {0, 4+P_START, JihuaVidPid, 0x6064, 0, &offset[P_START+4].act_position},
+    {0, 4+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+4].act_velocity},
+    {0, 4+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+4].act_torque},
+    {0, 4+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+4].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 5 
+    {0, 5+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+5].ctrl_word},
+    {0, 5+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+5].target_torque},
+    {0, 5+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+5].target_position},
+    // {0, 5+P_START, JihuaVidPid, 0x60b1, 0, &offset[P_START+5].offset_velocity},
+    // {0, 5+P_START, JihuaVidPid, 0x60b2, 0, &offset[P_START+5].offset_torque},
+    {0, 5+P_START, JihuaVidPid, 0x60ff, 0, &offset[P_START+5].target_velocity},
+
+    // {0, 5+P_START, JihuaVidPid, 0x2002, 2, &offset[P_START+5].dp},
+    // {0, 5+P_START, JihuaVidPid, 0x2002, 3, &offset[P_START+5].dv},
+    // {0, 5+P_START, JihuaVidPid, 0x2002, 4, &offset[P_START+5].dt},
+    // {0, 5+P_START, JihuaVidPid, 0x2002, 18, &offset[P_START+5].tt},
+
+    {0, 5+P_START, JihuaVidPid, 0x6041, 0, &offset[P_START+5].status_word},
+    {0, 5+P_START, JihuaVidPid, 0x6064, 0, &offset[P_START+5].act_position},
+    {0, 5+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+5].act_velocity},
+    {0, 5+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+5].act_torque},
+    {0, 5+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+5].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 6 
+
+        {0, P_START+6, JihuaVidPid, 0x6040, 0, &offset[P_START+6].ctrl_word},
+    {0, P_START+6, JihuaVidPid, 0x6071, 0, &offset[P_START+6].target_torque},
+    {0, P_START+6, JihuaVidPid, 0x607a, 0, &offset[P_START+6].target_position},
+    {0, P_START+6, JihuaVidPid, 0x60ff, 0, &offset[P_START+6].target_velocity},
+
+    {0, P_START+6, JihuaVidPid, 0x6041, 0, &offset[P_START+6].status_word},
+    {0, P_START+6, JihuaVidPid, 0x6064, 0, &offset[P_START+6].act_position},
+    {0, P_START+6, JihuaVidPid, 0x606c, 0, &offset[P_START+6].act_velocity},
+    {0, P_START+6, JihuaVidPid, 0x6077, 0, &offset[P_START+6].act_torque},
+    {0, P_START+6, JihuaVidPid, 0x6061, 0, &offset[P_START+6].mode_Of_Operation_dsiplay},
+
+#endif
+#if P_COUNT > 7 
+        {0, P_START+7, JihuaVidPid, 0x6040, 0, &offset[P_START+7].ctrl_word},
+    {0, P_START+7, JihuaVidPid, 0x6071, 0, &offset[P_START+7].target_torque},
+    {0, P_START+7, JihuaVidPid, 0x607a, 0, &offset[P_START+7].target_position},
+    {0, P_START+7, JihuaVidPid, 0x60ff, 0, &offset[P_START+7].target_velocity},
+
+    {0, P_START+7, JihuaVidPid, 0x6041, 0, &offset[P_START+7].status_word},
+    {0, P_START+7, JihuaVidPid, 0x6064, 0, &offset[P_START+7].act_position},
+    {0, P_START+7, JihuaVidPid, 0x606c, 0, &offset[P_START+7].act_velocity},
+    {0, P_START+7, JihuaVidPid, 0x6077, 0, &offset[P_START+7].act_torque},
+    {0, P_START+7, JihuaVidPid, 0x6061, 0, &offset[P_START+7].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 8 
+    {0, P_START+8, JihuaVidPid, 0x6040, 0, &offset[P_START+8].ctrl_word},
+    {0, P_START+8, JihuaVidPid, 0x6071, 0, &offset[P_START+8].target_torque},
+    {0, P_START+8, JihuaVidPid, 0x607a, 0, &offset[P_START+8].target_position},
+    {0, P_START+8, JihuaVidPid, 0x60ff, 0, &offset[P_START+8].target_velocity},
+
+    {0, P_START+8, JihuaVidPid, 0x6041, 0, &offset[P_START+8].status_word},
+    {0, P_START+8, JihuaVidPid, 0x6064, 0, &offset[P_START+8].act_position},
+    {0, P_START+8, JihuaVidPid, 0x606c, 0, &offset[P_START+8].act_velocity},
+    {0, P_START+8, JihuaVidPid, 0x6077, 0, &offset[P_START+8].act_torque},
+    {0, P_START+8, JihuaVidPid, 0x6061, 0, &offset[P_START+8].mode_Of_Operation_dsiplay},    
+#endif
+#if P_COUNT > 9 
+    {0, P_START+9, JihuaVidPid, 0x6040, 0, &offset[P_START+9].ctrl_word},
+    {0, P_START+9, JihuaVidPid, 0x6071, 0, &offset[P_START+9].target_torque},
+    {0, P_START+9, JihuaVidPid, 0x607a, 0, &offset[P_START+9].target_position},
+    {0, P_START+9, JihuaVidPid, 0x60ff, 0, &offset[P_START+9].target_velocity},
+
+    {0, P_START+9, JihuaVidPid, 0x6041, 0, &offset[P_START+9].status_word},
+    {0, P_START+9, JihuaVidPid, 0x6064, 0, &offset[P_START+9].act_position},
+    {0, P_START+9, JihuaVidPid, 0x606c, 0, &offset[P_START+9].act_velocity},
+    {0, P_START+9, JihuaVidPid, 0x6077, 0, &offset[P_START+9].act_torque},
+    {0, P_START+9, JihuaVidPid, 0x6061, 0, &offset[P_START+9].mode_Of_Operation_dsiplay},
+#endif
+#if P_COUNT > 10
+    {0, P_START+10, JihuaVidPid, 0x6040, 0, &offset[P_START+10].ctrl_word},
+    {0, P_START+10, JihuaVidPid, 0x6071, 0, &offset[P_START+10].target_torque},
+    {0, P_START+10, JihuaVidPid, 0x607a, 0, &offset[P_START+10].target_position},
+    {0, P_START+10, JihuaVidPid, 0x60ff, 0, &offset[P_START+10].target_velocity},
+
+    {0, P_START+10, JihuaVidPid, 0x6041, 0, &offset[P_START+10].status_word},
+    {0, P_START+10, JihuaVidPid, 0x6064, 0, &offset[P_START+10].act_position},
+    {0, P_START+10, JihuaVidPid, 0x606c, 0, &offset[P_START+10].act_velocity},
+    {0, P_START+10, JihuaVidPid, 0x6077, 0, &offset[P_START+10].act_torque},
+    {0, P_START+10, JihuaVidPid, 0x6061, 0, &offset[P_START+10].mode_Of_Operation_dsiplay},      
+#endif
+#if P_COUNT > 11
+    {0, P_START+11, JihuaVidPid, 0x6040, 0, &offset[P_START+11].ctrl_word},
+    {0, P_START+11, JihuaVidPid, 0x6071, 0, &offset[P_START+11].target_torque},
+    {0, P_START+11, JihuaVidPid, 0x607a, 0, &offset[P_START+11].target_position},
+    {0, P_START+11, JihuaVidPid, 0x60ff, 0, &offset[P_START+11].target_velocity},
+
+    {0, P_START+11, JihuaVidPid, 0x6041, 0, &offset[P_START+11].status_word},
+    {0, P_START+11, JihuaVidPid, 0x6064, 0, &offset[P_START+11].act_position},
+    {0, P_START+11, JihuaVidPid, 0x606c, 0, &offset[P_START+11].act_velocity},
+    {0, P_START+11, JihuaVidPid, 0x6077, 0, &offset[P_START+11].act_torque},
+    {0, P_START+11, JihuaVidPid, 0x6061, 0, &offset[P_START+11].mode_Of_Operation_dsiplay},      
+#endif
     {}};
 
 // 伺服电机的PDO映射参数
@@ -203,13 +353,13 @@ ec_pdo_entry_info_t Igh_pdo_entries[] = {
     {0x6040, 0x00, 16},
     {0x6071, 0x00, 16},
     {0x607a, 0x00, 32},
-    {0x60b1, 0x00, 32},
-    {0x60b2, 0x00, 16},
+    // {0x60b1, 0x00, 32},
+    // {0x60b2, 0x00, 16},
     {0x60ff, 0x00, 32},
-    {0x2002, 0x02, 16},
-    {0x2002, 0x03, 16},
-    {0x2002, 0x04, 16},
-    {0x2002, 18, 16},
+    // {0x2002, 0x02, 16},
+    // {0x2002, 0x03, 16},
+    // {0x2002, 0x04, 16},
+    // {0x2002, 18, 16},
 
     {0x6041, 0x00, 16},
     {0x6064, 0x00, 32},
@@ -220,8 +370,8 @@ ec_pdo_entry_info_t Igh_pdo_entries[] = {
 
 // 伺服电机PDO映射参数的组地址
 ec_pdo_info_t Igh_pdos[] = {
-    {0x1600, 10, Igh_pdo_entries + 0},
-    {0x1a00, 5, Igh_pdo_entries + 10},
+    {0x1600, 4, Igh_pdo_entries + 0},
+    {0x1a00, 5, Igh_pdo_entries + 4},
 };
 
 ec_sync_info_t Igh_syncs[] = {
@@ -279,6 +429,7 @@ void *rt_thread_function(void *arg)
     int act_torque = 0;
     int act_velocity = 0;
     int target_postion = 0;
+    int target_torque = 0;
     int target_torque_offset = 0;
     int act_positin_read = 0;
     int dir = 1;
@@ -298,7 +449,7 @@ void *rt_thread_function(void *arg)
         isAllEnabled = true;
         isAllInitedToZero = true;
 
-        for (i2 = 14; i2 <= 15; i2++)
+        for (i2 = P_START; i2 <= P_END; i2++)
         {
             uint16_t ss = EC_READ_U16(domain1_pd + offset[i2].status_word);
             if (statusOld[i2] != ss)
@@ -328,15 +479,11 @@ void *rt_thread_function(void *arg)
                     }
                     else if ((ss & 0xFF) == 0x31)
                     {
-                        last_position[i2] = EC_READ_S32(domain1_pd + offset[i2].act_position);
-                        EC_WRITE_S32(domain1_pd + offset[i2].target_position, last_position[i2]);
                         EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x07);
                     }
                     else if ((ss & 0xFF) == 0x33)
                     {
-                        last_position[i2] = EC_READ_S32(domain1_pd + offset[i2].act_position);
-                        EC_WRITE_S32(domain1_pd + offset[i2].target_position, last_position[i2]);
-                        EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x0F);
+                       EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x0F);
                     }
                 }
                 if (statusDeCount[i2] <= 0)
@@ -353,7 +500,7 @@ void *rt_thread_function(void *arg)
                 isEnabled[i2] = true;
 
                 // 判断所有电机都使能
-                for (i3 = 14; i3 <= 15; i3++)
+                for (i3 = P_START; i3 <= P_END; i3++)
                 {
                     isAllEnabled = (isAllEnabled && isEnabled[i3]);
                 }
@@ -364,62 +511,20 @@ void *rt_thread_function(void *arg)
                     act_velocity = EC_READ_S32(domain1_pd + offset[i2].act_velocity);
                     act_torque = EC_READ_S16(domain1_pd + offset[i2].act_torque);
 
-                    if (isInitedToDefault[i2] == false)
+                    // printf("act_position %d, %d \n",i2,act_position);
+                    // printf("isAllInitedToZero  \n");
+                    if (i2 == P_START)
                     {
-                        if (last_position[i2] > defaultPositions[i2] + 80)
-                        {
-                            target_postion = last_position[i2] - 120;
-                            printf("position + %d,  %d to %d  \n", i2, last_position[i2], target_postion);
-                            EC_WRITE_S32(domain1_pd + offset[i2].target_position, target_postion);
-                            last_position[i2] = target_postion;
-                        }
-                        else if (last_position[i2] < defaultPositions[i2] - 80)
-                        {
-                            target_postion = last_position[i2] + 120;
-                            printf("position - %d,  %d to %d  \n", i2, last_position[i2], target_postion);
-                            EC_WRITE_S32(domain1_pd + offset[i2].target_position, target_postion);
-                            last_position[i2] = target_postion;
-                        }
-                        else
-                        {
-                            isInitedToDefault[i2] = true;
-                        }
+                        memset(&reference, 0, sizeof(reference));
+                        memset(&feedback, 0, sizeof(feedback));
+                        data_ok = edb_pull_ref(&reference);
                     }
-
-                    // 判断所有电机都零位
-                    for (i4 = 14; i4 <= 15; i4++)
+                    if (data_ok)
                     {
-                        isAllInitedToZero = (isAllInitedToZero && isInitedToDefault[i4]);
+                        target_torque = reference.motor_ref[i2].target_torque;
+                        EC_WRITE_S16(domain1_pd + offset[i2].target_torque, target_torque);
                     }
-                    if (isAllInitedToZero)
-                    {
-                        // printf("isAllInitedToZero  \n");
-                        if (i2 == 14)
-                        {
-                            memset(&reference, 0, sizeof(reference));
-                            memset(&feedback, 0, sizeof(feedback));
-                            data_ok = edb_pull_ref(&reference);
-                        }
-                        if (data_ok)
-                        {
-                            target_postion = reference.motor_ref[i2].target_postion;
-                            // if(i2==7||i2==8||i2==9)
-                            // {
-                            //     target_postion *= -1;
-                            // }
-                            EC_WRITE_S32(domain1_pd + offset[i2].target_position, target_postion);
-                            // printf("position %d,  %d to %d  \n", i2, act_position, target_postion);
-                            last_position[i2] = target_postion;
-
-                            target_torque_offset = reference.motor_ref[i2].torque_offset;
-                            // if(target_torque_offset!=0){
-                            //     EC_WRITE_S16(domain1_pd + offset[i2].offset_torque, target_torque_offset);
-                            // }
-
-                            feedback.motor_fdbk[i2].target_position = target_postion;
-                            feedback.motor_fdbk[i2].target_torque_offset = target_torque_offset;
-                        }
-                    }
+                    
 
                     feedback.motor_fdbk[i2].feedbk_postion = act_position;
                     feedback.motor_fdbk[i2].feedbk_speed = act_velocity;
@@ -507,7 +612,7 @@ void Igh_init()
 
     printf("servo %d  begin init! \n", i);
 
-    for (ii = 14; ii <= 15; ii++)
+    for (ii = P_START; ii <= P_END; ii++)
     {
 
         ec_slave_config_t *sc;
@@ -524,12 +629,13 @@ void Igh_init()
             exit(EXIT_FAILURE);
         }
 
-        ecrt_slave_config_sdo16(sc, 0x1C32, 1, 2); // set output synchronization triggered by  sync0 event DC mode
-        ecrt_slave_config_sdo16(sc, 0x1C33, 1, 2); // set input  synchronization triggered by  sync1 evnent DC mode
-        // ecrt_slave_config_sdo8(sc, 0x60c2, 1, (1000/TASK_FREQUENCY) );
-        // ecrt_slave_config_sdo8(sc, 0x60c2, 2, -3);
+        //ecrt_slave_config_sdo16(sc, 0x1C32, 1, 2); // set output synchronization triggered by  sync0 event DC mode
+        //ecrt_slave_config_sdo16(sc, 0x1C33, 1, 2); // set input  synchronization triggered by  sync1 evnent DC mode
+        //ecrt_slave_config_sdo32(sc, 0x1C32, 2, PERIOD_NS);
+        //ecrt_slave_config_sdo32(sc, 0x1C33, 2, PERIOD_NS);
+        // 普通力控模式
         ecrt_slave_config_sdo8(sc, 0x6060, 0, 8);
-        ecrt_slave_config_dc(sc, 0x0300, PERIOD_NS, PERIOD_NS / 2, 0, 0);
+        ecrt_slave_config_dc(sc, 0x0300, PERIOD_NS, (PERIOD_NS *3/ 4), 0, 0);
     }
 
     if (ecrt_domain_reg_pdo_entry_list(domain1, domain1_regs))
@@ -565,31 +671,8 @@ int main(int argc, char **argv)
         printf("clean reference from shm \n ");
     }
 
-    // 读取初始化位置
-    bool dataOk = edb_pull_fdbk(&feedback);
-    // if (dataOk)
-    // {
-    //     for (int i = 0; i <= 18; i++)
-    //     {
-    //         defaultPositions[i] = feedback.motor_fdbk[0].default_position;
-    //     }
-    // }
 
-    // right
-    //  defaultPositions[7] =  (int)((0.468064/PI)*180*16*pow(2,17)/360);
-    //  defaultPositions[8] =  (int)((-0.0342226/PI)*180*16*pow(2,17)/360);
-    //  defaultPositions[9] =  (int)(-0.233342/(2*PI)*16*pow(2,17));
-    //  defaultPositions[10] =  (int)((0.841583/PI)*180*16*pow(2,17)/360);
-    //  defaultPositions[11] =  (int)(0.57/(2*PI)*16*pow(2,17));
-    //  defaultPositions[12] =  (int)((-0.59/PI)*180*16*pow(2,17)/360);
 
-    // //left
-    // defaultPositions[13] =  (int)((-0.468064/PI)*180*16*pow(2,17)/360);
-    // defaultPositions[14] =  (int)((0.0342226/PI)*180*16*pow(2,17)/360);
-    // defaultPositions[15] =  (int)((0.233342/PI)*180*16*pow(2,17)/360);
-    // defaultPositions[16] =  (int)((-0.841583/PI)*180*16*pow(2,17)/360);
-    // defaultPositions[17] =  (int)(-0.57/(2*PI)*16*pow(2,17));
-    // defaultPositions[18] =  (int)((0.59/PI)*180*16*pow(2,17)/360);
 
     Igh_init();
     Igh_master_activate();

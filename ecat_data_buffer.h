@@ -22,8 +22,9 @@
 #define MAX_MOTORS_NUM 30		  /*Max motors*/
 #define MAX_REFERNECE_GROUPS 2000 /*Max group motor references*/
 
-#define P_START 4
-#define P_END 17
+#define P_START 0
+#define P_END 11
+#define P_COUNT 12
 
 // 共享内存区域,2M大小
 #define SHM_KEY 12345

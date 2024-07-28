@@ -177,7 +177,6 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, 0+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+0].act_torque},
     {0, 0+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+0].mode_Of_Operation_dsiplay},
     ////
-#if P_COUNT > 1    
     {0, 1+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+1].ctrl_word},
     {0, 1+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+1].target_torque},
     {0, 1+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+1].target_position},
@@ -195,8 +194,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, 1+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+1].act_velocity},
     {0, 1+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+1].act_torque},
     {0, 1+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+1].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 2 
+
     {0, 2+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+2].ctrl_word},
     {0, 2+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+2].target_torque},
     {0, 2+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+2].target_position},
@@ -214,8 +212,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, 2+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+2].act_velocity},
     {0, 2+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+2].act_torque},
     {0, 2+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+2].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 3
+
     {0, 3+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+3].ctrl_word},
     {0, 3+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+3].target_torque},
     {0, 3+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+3].target_position},
@@ -233,8 +230,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, 3+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+3].act_velocity},
     {0, 3+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+3].act_torque},
     {0, 3+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+3].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 4 
+
     {0, 4+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+4].ctrl_word},
     {0, 4+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+4].target_torque},
     {0, 4+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+4].target_position},
@@ -252,8 +248,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, 4+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+4].act_velocity},
     {0, 4+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+4].act_torque},
     {0, 4+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+4].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 5 
+
     {0, 5+P_START, JihuaVidPid, 0x6040, 0, &offset[P_START+5].ctrl_word},
     {0, 5+P_START, JihuaVidPid, 0x6071, 0, &offset[P_START+5].target_torque},
     {0, 5+P_START, JihuaVidPid, 0x607a, 0, &offset[P_START+5].target_position},
@@ -271,8 +266,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, 5+P_START, JihuaVidPid, 0x606c, 0, &offset[P_START+5].act_velocity},
     {0, 5+P_START, JihuaVidPid, 0x6077, 0, &offset[P_START+5].act_torque},
     {0, 5+P_START, JihuaVidPid, 0x6061, 0, &offset[P_START+5].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 6 
+
 
         {0, P_START+6, JihuaVidPid, 0x6040, 0, &offset[P_START+6].ctrl_word},
     {0, P_START+6, JihuaVidPid, 0x6071, 0, &offset[P_START+6].target_torque},
@@ -285,8 +279,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, P_START+6, JihuaVidPid, 0x6077, 0, &offset[P_START+6].act_torque},
     {0, P_START+6, JihuaVidPid, 0x6061, 0, &offset[P_START+6].mode_Of_Operation_dsiplay},
 
-#endif
-#if P_COUNT > 7 
+
         {0, P_START+7, JihuaVidPid, 0x6040, 0, &offset[P_START+7].ctrl_word},
     {0, P_START+7, JihuaVidPid, 0x6071, 0, &offset[P_START+7].target_torque},
     {0, P_START+7, JihuaVidPid, 0x607a, 0, &offset[P_START+7].target_position},
@@ -297,8 +290,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, P_START+7, JihuaVidPid, 0x606c, 0, &offset[P_START+7].act_velocity},
     {0, P_START+7, JihuaVidPid, 0x6077, 0, &offset[P_START+7].act_torque},
     {0, P_START+7, JihuaVidPid, 0x6061, 0, &offset[P_START+7].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 8 
+
     {0, P_START+8, JihuaVidPid, 0x6040, 0, &offset[P_START+8].ctrl_word},
     {0, P_START+8, JihuaVidPid, 0x6071, 0, &offset[P_START+8].target_torque},
     {0, P_START+8, JihuaVidPid, 0x607a, 0, &offset[P_START+8].target_position},
@@ -309,8 +301,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, P_START+8, JihuaVidPid, 0x606c, 0, &offset[P_START+8].act_velocity},
     {0, P_START+8, JihuaVidPid, 0x6077, 0, &offset[P_START+8].act_torque},
     {0, P_START+8, JihuaVidPid, 0x6061, 0, &offset[P_START+8].mode_Of_Operation_dsiplay},    
-#endif
-#if P_COUNT > 9 
+
     {0, P_START+9, JihuaVidPid, 0x6040, 0, &offset[P_START+9].ctrl_word},
     {0, P_START+9, JihuaVidPid, 0x6071, 0, &offset[P_START+9].target_torque},
     {0, P_START+9, JihuaVidPid, 0x607a, 0, &offset[P_START+9].target_position},
@@ -321,8 +312,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, P_START+9, JihuaVidPid, 0x606c, 0, &offset[P_START+9].act_velocity},
     {0, P_START+9, JihuaVidPid, 0x6077, 0, &offset[P_START+9].act_torque},
     {0, P_START+9, JihuaVidPid, 0x6061, 0, &offset[P_START+9].mode_Of_Operation_dsiplay},
-#endif
-#if P_COUNT > 10
+
     {0, P_START+10, JihuaVidPid, 0x6040, 0, &offset[P_START+10].ctrl_word},
     {0, P_START+10, JihuaVidPid, 0x6071, 0, &offset[P_START+10].target_torque},
     {0, P_START+10, JihuaVidPid, 0x607a, 0, &offset[P_START+10].target_position},
@@ -333,8 +323,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, P_START+10, JihuaVidPid, 0x606c, 0, &offset[P_START+10].act_velocity},
     {0, P_START+10, JihuaVidPid, 0x6077, 0, &offset[P_START+10].act_torque},
     {0, P_START+10, JihuaVidPid, 0x6061, 0, &offset[P_START+10].mode_Of_Operation_dsiplay},      
-#endif
-#if P_COUNT > 11
+
     {0, P_START+11, JihuaVidPid, 0x6040, 0, &offset[P_START+11].ctrl_word},
     {0, P_START+11, JihuaVidPid, 0x6071, 0, &offset[P_START+11].target_torque},
     {0, P_START+11, JihuaVidPid, 0x607a, 0, &offset[P_START+11].target_position},
@@ -345,7 +334,7 @@ const static ec_pdo_entry_reg_t domain1_regs[] = {
     {0, P_START+11, JihuaVidPid, 0x606c, 0, &offset[P_START+11].act_velocity},
     {0, P_START+11, JihuaVidPid, 0x6077, 0, &offset[P_START+11].act_torque},
     {0, P_START+11, JihuaVidPid, 0x6061, 0, &offset[P_START+11].mode_Of_Operation_dsiplay},      
-#endif
+
     {}};
 
 // 伺服电机的PDO映射参数
@@ -483,7 +472,7 @@ void *rt_thread_function(void *arg)
                     }
                     else if ((ss & 0xFF) == 0x33)
                     {
-  //                      EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x0F);
+                        EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x0F);
                     }
                 }
                 if (statusDeCount[i2] <= 0)
@@ -629,10 +618,8 @@ void Igh_init()
             exit(EXIT_FAILURE);
         }
 
-        //ecrt_slave_config_sdo16(sc, 0x1C32, 1, 2); // set output synchronization triggered by  sync0 event DC mode
-        //ecrt_slave_config_sdo16(sc, 0x1C33, 1, 2); // set input  synchronization triggered by  sync1 evnent DC mode
-        //ecrt_slave_config_sdo32(sc, 0x1C32, 2, PERIOD_NS);
-        //ecrt_slave_config_sdo32(sc, 0x1C33, 2, PERIOD_NS);
+        ecrt_slave_config_sdo16(sc, 0x1C32, 1, 2); // set output synchronization triggered by  sync0 event DC mode
+        ecrt_slave_config_sdo16(sc, 0x1C33, 1, 2); // set input  synchronization triggered by  sync1 evnent DC mode
         // 普通力控模式
         ecrt_slave_config_sdo8(sc, 0x6060, 0, 4);
         ecrt_slave_config_dc(sc, 0x0300, PERIOD_NS, (PERIOD_NS *3/ 4), 0, 0);
