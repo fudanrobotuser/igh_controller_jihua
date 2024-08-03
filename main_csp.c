@@ -45,7 +45,7 @@ static unsigned int sync_ref_counter = 0;
 static struct timespec apptime;
 
 // 同步周期时钟配置,8毫秒下发周期控制
-#define TASK_FREQUENCY 1000 /* Hz */
+#define TASK_FREQUENCY 125 /* Hz */
 #define CLOCK_TO_USE CLOCK_REALTIME
 #define TIMEOUT_CLEAR_ERROR (1 * TASK_FREQUENCY) /* clearing error timeout */
 // 时间控制相关函数

@@ -12,9 +12,9 @@ LDLIBS = -lethercat
 
 # Source Files
 # SRCS = main.c ecat_data_buffer.c
-SRCS = main_csp.c ecat_data_buffer.c
+SRCS = main_csp1.c ecat_data_buffer.c
 # SRCS = main_jihua_12_csp_0714.c ecat_data_buffer.c
-#   SRCS = main_jihua_12_csp_0714.c ecat_data_buffer.c   #new!
+#   SRCS = main_t_6.c ecat_data_buffer.c   #new!
 # 
 
 # Object Files (placed in the build directory)

@@ -483,7 +483,7 @@ void *rt_thread_function(void *arg)
                     }
                     else if ((ss & 0xFF) == 0x33)
                     {
-  //                      EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x0F);
+                       EC_WRITE_U16(domain1_pd + offset[i2].ctrl_word, 0x0F);
                     }
                 }
                 if (statusDeCount[i2] <= 0)
@@ -523,6 +523,8 @@ void *rt_thread_function(void *arg)
                     {
                         target_torque = reference.motor_ref[i2].target_torque;
                         EC_WRITE_S16(domain1_pd + offset[i2].target_torque, target_torque);
+                        printf("tau %d, %d \n",i2,target_torque);
+
                     }
                     
 

@@ -422,6 +422,7 @@ void check_domain1_state(void)
  * **/
 void *rt_thread_function(void *arg)
 {
+   
     struct timespec wakeupTime, time;
     // get current time
     clock_gettime(CLOCK_TO_USE, &wakeupTime);
@@ -437,6 +438,7 @@ void *rt_thread_function(void *arg)
     bool isAllInitedToZero = true;
     int i2, i3, i4 = 0;
     bool data_ok = false;
+    int error = 0;
     while (1)
     {
 
@@ -491,8 +493,8 @@ void *rt_thread_function(void *arg)
                     }
                     else if ((ss & 0xFF) == 0x08)
                     {
-                        error = EC_READ_U16(domain1_pd + offset[i2].error);
-                        printf("error %d : 0x%04x   \n", i2, error);
+                        // error = EC_READ_U16(domain1_pd + offset[i2].error);
+                        // printf("error %d : 0x%04x   \n", i2, error);
                     }                    
                 }
                 if (statusDeCount[i2] <= 0)
@@ -529,15 +531,6 @@ void *rt_thread_function(void *arg)
                             EC_WRITE_S32(domain1_pd + offset[i2].target_position, target_postion);
                             last_position[i2] = target_postion;
 
-                            if (i2 == 8)
-                            {
-                                // 获取当前时间
-                                gettimeofday(&tv, NULL);
-                                // 计算毫秒级时间戳
-                                milliseconds = (long long)(tv.tv_sec) * 1000 + (long long)(tv.tv_usec) / 1000;
-                                // 打印毫秒级时间戳
-                                printf("当前时间戳（毫秒级）: %lld\n", milliseconds);
-                            }
                         }
                         else if (last_position[i2] < defaultPositions[i2] - 80)
                         {
@@ -546,15 +539,7 @@ void *rt_thread_function(void *arg)
                             EC_WRITE_S32(domain1_pd + offset[i2].target_position, target_postion);
                             last_position[i2] = target_postion;
 
-                            if (i2 == 8)
-                            {
-                                // 获取当前时间
-                                gettimeofday(&tv, NULL);
-                                // 计算毫秒级时间戳
-                                milliseconds = (long long)(tv.tv_sec) * 1000 + (long long)(tv.tv_usec) / 1000;
-                                // 打印毫秒级时间戳
-                                printf("当前时间戳（毫秒级）: %lld\n", milliseconds);
-                            }
+
                         }
                         else
                         {
@@ -579,27 +564,7 @@ void *rt_thread_function(void *arg)
                         if (data_ok)
                         {
                             target_postion = reference.motor_ref[i2].target_postion;
-                            // 96127,-108139 , 0, 0, 0, 0, -94163, 87564, 0, 0, 0};
-                            if(i2==15)
-                            {
-                                target_postion += 87564;
-                            }
-                            if(i2==14)
-                            {
-                                target_postion += -94163;
-                            }
-                            if(i2==9)
-                            {
-                                target_postion += -108139;
-                            }
-                            if(i2==8)
-                            {
-                                target_postion += 96127;
-                            }                                                                                    
-                            // if(i2==7||i2==8||i2==9)
-                            // {
-                            //     target_postion *= -1;
-                            // }
+                                                   
                             EC_WRITE_S32(domain1_pd + offset[i2].target_position, target_postion);
                             // printf("position %d,  %d to %d  \n", i2, act_position, target_postion);
                             last_position[i2] = target_postion;
@@ -609,19 +574,11 @@ void *rt_thread_function(void *arg)
                             //     EC_WRITE_S16(domain1_pd + offset[i2].offset_torque, target_torque_offset);
                             // }
 
-                            // if (i2 == 8)
-                            // {
-                            //     // 获取当前时间
-                            //     gettimeofday(&tv, NULL);
-                            //     // 计算毫秒级时间戳
-                            //     milliseconds = (long long)(tv.tv_sec) * 1000 + (long long)(tv.tv_usec) / 1000;
-                            //     // 打印毫秒级时间戳
-                            //     printf("当前时间戳（毫秒级）: %lld\n", milliseconds);
-                            // }   
+
 
                             if(abs(target_postion - act_position)>1000)                         
                             {
-                                printf("big step %d : %lld, %d to %d, gap is: %d  \n",i2, milliseconds,act_position,target_postion,abs(target_postion - act_position));
+                                printf("big step %d :  %d to %d, gap is: %d  \n",i2,act_position,target_postion,abs(target_postion - act_position));
                             }
 
                             feedback.motor_fdbk[i2].target_position = target_postion;
@@ -634,11 +591,13 @@ void *rt_thread_function(void *arg)
                     feedback.motor_fdbk[i2].feedbk_torque = act_torque;
                     feedback.motor_fdbk[i2].status_word = ss;
                     edb_push_fdbk(&feedback);
+                }
             }
         }
 
         Igh_rechekTime();
     }
+
     return NULL;
 }
 
@@ -772,9 +731,6 @@ int main(int argc, char **argv)
     {
         printf("clean reference from shm \n ");
     }
-
-
-
 
     Igh_init();
     Igh_master_activate();
